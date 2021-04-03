@@ -1508,7 +1508,7 @@ static bool createNativeWindow(_GLFWwindow* window,
     {
         [window->ns.object setOpaque:NO];
         [window->ns.object setHasShadow:NO];
-        [window->ns.object setBackgroundColor:[NSColor clearColor]];
+        [window->ns.object setBackgroundColor:[NSColor redColor]];
     }
 
     [window->ns.object setContentView:window->ns.view];
@@ -1521,30 +1521,21 @@ static bool createNativeWindow(_GLFWwindow* window,
     _glfwPlatformGetWindowSize(window, &window->ns.width, &window->ns.height);
     _glfwPlatformGetFramebufferSize(window, &window->ns.fbWidth, &window->ns.fbHeight);
 
-  //
-//  NSVisualEffectView *vview = [[NSVisualEffectView alloc] initWithFrame:
-//      NSMakeRect(600,
-//                 0,
-//                 1024,
-//                 768)];
+    NSView* otherView = [[NSView alloc]
+        initWithFrame:[[window->ns.object contentView] bounds]];
 
-  NSView* otherView = [[NSView alloc]
-      initWithFrame:[[window->ns.object contentView] bounds]];
+    NSVisualEffectView *vview = [[NSVisualEffectView alloc] initWithFrame:
+        [[window->ns.object contentView] bounds]];
 
-  NSVisualEffectView *vview = [[NSVisualEffectView alloc] initWithFrame:
-      [[window->ns.object contentView] bounds]];
+    [vview setAutoresizingMask:
+        NSViewWidthSizable | NSViewHeightSizable];
 
-  NSLog(@"%@", NSStringFromRect([[window->ns.object contentView] bounds]));
-  [vview setAutoresizingMask:
-      NSViewWidthSizable | NSViewHeightSizable];
-
-  [vview setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
-  [vview setState:NSVisualEffectStateActive];
-  NSVisualEffectMaterial vibrancyType = NSVisualEffectMaterialUnderWindowBackground;
-  [vview setMaterial:vibrancyType];
-  [window->ns.view addSubview:vview positioned:NSWindowBelow relativeTo:nil];
-  [window->ns.view addSubview:otherView positioned:NSWindowBelow relativeTo:nil];
-  NSLog(@"%@", );
+    [vview setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
+    [vview setState:NSVisualEffectStateActive];
+    NSVisualEffectMaterial vibrancyType = NSVisualEffectMaterialUnderWindowBackground;
+    [vview setMaterial:vibrancyType];
+    [window->ns.view addSubview:otherView positioned:NSWindowBelow relativeTo:vview];
+    [window->ns.view addSubview:vview positioned:NSWindowBelow relativeTo:nil];
   //
 
     return true;

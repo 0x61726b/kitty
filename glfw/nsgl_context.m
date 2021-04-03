@@ -293,13 +293,14 @@ bool _glfwCreateContextNSGL(_GLFWwindow* window,
                                   forParameter:NSOpenGLContextParameterSurfaceOpacity];
     }
 
-    [window->ns.view setWantsBestResolutionOpenGLSurface:window->ns.retina];
+    [[window->ns.view subviews][1] setWantsBestResolutionOpenGLSurface:window->ns.retina];
 
     GLint interval = 0;
     [window->context.nsgl.object setValues:&interval
                               forParameter:NSOpenGLContextParameterSwapInterval];
 
-    [window->context.nsgl.object setView:window->ns.view];
+    [window->context.nsgl.object setView:[window->ns.view subviews][1]];
+    NSLog(@"selamun aleykum");
 
     window->context.makeCurrent = makeContextCurrentNSGL;
     window->context.swapBuffers = swapBuffersNSGL;
